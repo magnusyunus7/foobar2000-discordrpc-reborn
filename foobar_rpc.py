@@ -51,6 +51,22 @@ def save_cache():
 
 
 # ---------- helpers ----------
+def upload_imgbb(data):
+    try:
+        up = requests.post(
+            "https://api.imgbb.com/1/upload",
+            params={"key": IMGBB_KEY},
+            data={"image": base64.b64encode(data).decode()},
+            timeout=20,
+        )
+        if up.ok:
+            return up.json()["data"]["url"]
+        log("imgbb failed:", up.status_code, up.text[:100])
+    except (requests.RequestException, KeyError, ValueError) as e:
+        log("imgbb error:", e)
+    return None
+
+
 def fix(s):
     if not s or s.strip() == "?":
         return None
@@ -72,7 +88,7 @@ def sniff(b):
 
 
 def get_art(item, artist, album, title):
-    key = f"{artist}||{album if album != '?' else clean_title(title)}"
+    key = f"{artist}||{album if album != '?' else title}"
     if key in art_cache:
         return art_cache[key]
     if key in art_failed:
@@ -84,18 +100,11 @@ def get_art(item, artist, album, title):
         if r.status_code == 200:
             ext, mime, data = sniff(r.content)
             if ext:
-                up = requests.post(
-                    "https://api.imgbb.com/1/upload",
-                    params={"key": IMGBB_KEY},
-                    data={"image": base64.b64encode(data).decode()},
-                    timeout=20,
-                )
-                if up.ok:
-                    url = up.json()["data"]["url"]
+                url = upload_imgbb(data)
+                if url:
                     art_cache[key] = url
                     save_cache()
                     return url
-                log("imgbb failed:", up.status_code, up.text[:100])
     except (requests.RequestException, KeyError, ValueError) as e:
         log("art error:", e)
     art_failed.add(key)
@@ -169,10 +178,12 @@ while True:
                     art = get_art(item, artist, album, title)
                     rpc.update(
                         activity_type=ActivityType.LISTENING,
-                        details=fix(clean_title(title)),
+                        details=fix(title),
                         state=fix(artist),
                         large_image=art,
                         large_text=fix(album),
+                        small_image="logo",
+                        small_text="foobar2000",
                         start=start,
                         end=end,
                     )
@@ -188,10 +199,12 @@ while True:
                     art = get_art(item, artist, album, title)
                     rpc.update(
                         activity_type=ActivityType.LISTENING,
-                        details=fix(clean_title(title)),
-                        state=fix(f"Paused - {artist}"),
+                        details=fix(title),
+                        state=fix(artist),
                         large_image=art,
                         large_text=fix(album),
+                        small_image="stopped",
+                        small_text="Paused"
                     )
                     last = ("paused", title, artist, 0)
         else:

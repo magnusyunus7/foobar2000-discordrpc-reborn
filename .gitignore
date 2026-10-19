@@ -1,3 +1,4 @@
 venv/
 .env
 art_cache.json
+assets/
