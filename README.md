@@ -2,7 +2,18 @@
 
 Show what you're listening to in foobar2000 on your Discord profile, as a Spotify-style "Listening to" card with album art and a live progress bar.
 
-![Discord status example](assets/status_playing.png)
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/screenshot-playing.png" alt="Status while playing" width="400"><br>
+      <sub>While playing</sub>
+    </td>
+    <td align="center">
+      <img src="assets/screenshot-paused.png" alt="Status while paused" width="400"><br>
+      <sub>While paused</sub>
+    </td>
+  </tr>
+</table>
 
 ## Features
 
