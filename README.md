@@ -51,11 +51,11 @@ If you use another Discord rich presence component in foobar2000, remove it (or 
 2. The application name is what appears after "Listening to", so name it something like `foobar2000`.
 3. Copy the **Application ID** from the General Information page.
 4. Under General Information, upload an **App Icon**. This is the logo shown at the top right of the status (otherwise Discord shows a controller icon).
-5. Go to **Rich Presence > Art Assets** and upload two square images (512x512 or larger) with exactly these names:
-   - `logo`: shown in the corner of the cover while playing
-   - `stopped`: shown in the corner of the cover while paused
+5. Go to **Rich Presence > Art Assets** and upload the two icons from the [`assets/`](assets/) folder of this repo (or your own square images, 512x512 or larger):
+   - `assets/logo.png` as **`logo`**: shown in the corner of the cover while playing
+   - `assets/stopped.png` as **`stopped`**: shown in the corner of the cover while paused
 
-   Asset names are case-sensitive, and new assets can take a few minutes to become available.
+   The asset names must be exactly `logo` and `stopped` (lowercase), because the script refers to them by name. If you use your own images, give them those names when you upload. New assets can take a few minutes to become available.
 
 ### 3. Get an ImgBB API key
 
